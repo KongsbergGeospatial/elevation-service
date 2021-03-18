@@ -1,4 +1,9 @@
-FROM node:14
+FROM node:14-alpine3.10
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup && mkdir /app
+RUN chown -R appuser:appgroup /app
+WORKDIR /app
+USER appuser
 
 COPY . /app
 WORKDIR /app
@@ -9,7 +14,5 @@ ENV TILE_SET_PATH /app/data
 ENV MAX_POST_SIZE 700kb
 
 EXPOSE 3000
-
-HEALTHCHECK CMD curl --fail http://localhost:3000/status || exit 1
 
 CMD ["yarn", "run", "start"]
